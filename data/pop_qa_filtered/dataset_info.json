@@ -1,0 +1,92 @@
+{
+  "citation": "",
+  "description": "",
+  "features": {
+    "id": {
+      "dtype": "int64",
+      "_type": "Value"
+    },
+    "subj": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "prop": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "obj": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "subj_id": {
+      "dtype": "int64",
+      "_type": "Value"
+    },
+    "prop_id": {
+      "dtype": "int64",
+      "_type": "Value"
+    },
+    "obj_id": {
+      "dtype": "int64",
+      "_type": "Value"
+    },
+    "s_aliases": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "o_aliases": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "s_uri": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "o_uri": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "s_wiki_title": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "o_wiki_title": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "s_pop": {
+      "dtype": "int64",
+      "_type": "Value"
+    },
+    "o_pop": {
+      "dtype": "int64",
+      "_type": "Value"
+    },
+    "question": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "possible_answers": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "prompt": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "answer": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "wiki_title": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "__index_level_0__": {
+      "dtype": "int64",
+      "_type": "Value"
+    }
+  },
+  "homepage": "",
+  "license": ""
+}

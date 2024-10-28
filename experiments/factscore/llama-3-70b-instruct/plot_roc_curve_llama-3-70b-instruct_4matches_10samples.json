@@ -1,0 +1,58 @@
+{
+  "data_size": 3137,
+  "inline_verbalized_confidence": {
+    "auroc": 0.5359487937411305,
+    "auprc": 0.5633955275099667,
+    "auprc_n": 0.4862657330094603
+  },
+  "verbalized_confidence_with_options": {
+    "auroc": 0.6752619096055446,
+    "auprc": 0.6622927865021246,
+    "auprc_n": 0.592799056100145
+  },
+  "sc_score_9samples": {
+    "auroc": 0.8291566277856619,
+    "auprc": 0.8303518365976591,
+    "auprc_n": 0.7614455022889268
+  },
+  "breakdown_eigenvector_centrality_9samples": {
+    "auroc": 0.7570568329342291,
+    "auprc": 0.7234376787126899,
+    "auprc_n": 0.7221151524673415
+  },
+  "breakdown_betweenness_centrality_9samples": {
+    "auroc": 0.7592713100014624,
+    "auprc": 0.7069549544194862,
+    "auprc_n": 0.7331279237299327
+  },
+  "breakdown_closeness_centrality_9samples": {
+    "auroc": 0.8667104169883602,
+    "auprc": 0.8538135616359784,
+    "auprc_n": 0.8500633661457462
+  },
+  "breakdown_pagerank_9samples": {
+    "auroc": 0.7641986338134839,
+    "auprc": 0.75237317355503,
+    "auprc_n": 0.7005887866597822
+  },
+  "breakdown_closeness_centrality_with_node_confidence_9samples": {
+    "auroc": 0.878683339991879,
+    "auprc": 0.8881100193761423,
+    "auprc_n": 0.8569353200997376
+  },
+  "sc_plus_vc": {
+    "auroc": 0.8333171975937733,
+    "auprc": 0.8459241549923441,
+    "auprc_n": 0.7710788159201545
+  },
+  "sc_based_vc": {
+    "auroc": 0.8394502083757152,
+    "auprc": 0.8488763308099962,
+    "auprc_n": 0.7865389105053449
+  },
+  "sc_based_ilvc": {
+    "auroc": 0.8260054608244668,
+    "auprc": 0.8387592466331264,
+    "auprc_n": 0.7590966272214039
+  }
+}
