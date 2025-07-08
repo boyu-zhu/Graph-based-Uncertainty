@@ -10,7 +10,7 @@ from src.uad import UncertaintyAwareDecoding
 from src.models import get_model
 import random
 
-os.environ["HF_DATASETS_CACHE"] = '/nlp/scr/jiangm/cache'
+os.environ["HF_DATASETS_CACHE"] = ''
 OUTPUT_DIR = 'experiments'
 DATA_DIR = 'data'
 
@@ -19,10 +19,10 @@ parser.add_argument('--num_generations_per_prompt', type=int, default=10)
 parser.add_argument('--model', type=str, default='gpt-3.5-turbo')
 parser.add_argument('--temperature', type=float, default=0.7)
 parser.add_argument('--data_size', type=int, default=50)
-parser.add_argument('--dataset', type=str, default='factscore_m')
-parser.add_argument('--breakdown', type=utils.str2bool, default=False)
+parser.add_argument('--dataset', type=str, default='factscore')
+parser.add_argument('--breakdown', type=utils.str2bool, default=True)
 parser.add_argument('--num_samples_for_claims', type=int, default=4)
-parser.add_argument('--gpt_annotate', type=utils.str2bool, default=False)
+parser.add_argument('--gpt_annotate', type=utils.str2bool, default=True)
 parser.add_argument('--sc_samples', type=int, default=4)
 parser.add_argument('--safe_eval', type=utils.str2bool, default=False)
 parser.add_argument('--uad', type=utils.str2bool, default=False)
