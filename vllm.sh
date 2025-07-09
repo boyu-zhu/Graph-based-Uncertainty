@@ -1,5 +1,6 @@
 CUDA_VISIBLE_DEVICES=0,1 nohup python -m vllm.entrypoints.openai.api_server \
   --model /data/ckp/Meta-Llama-3-70B-Instruct \
+  --model-name llama-3-70b-instruct \
   --host 0.0.0.0 \
   --port 8000 \
   --tensor-parallel-size 2 \

@@ -12,7 +12,7 @@ import os
 from tqdm import tqdm
 
 def convert_to_claim_list(breakdown_dicts):
-    return [dict_['claim'] for dict_ in breakdown_dicts]
+    return [dict_['claim'] for dict_ in breakdown_dicts if 'claim' in dict_]
 
 class BreakdownProcessor:
     def __init__(self, args, llm_model):
@@ -21,15 +21,16 @@ class BreakdownProcessor:
         self.breakdown_prompt = self._get_breakdown_prompt()
 
     def _get_breakdown_prompt(self):
-        return "Please deconstruct the following paragraph into the smallest possible standalone self-contained facts without semantic repetition, and return the output as a jsonl, where each line is {{claim:[CLAIM], gpt-confidence:[CONF]}}.\nThe confidence score [CONF] should represent your confidence in the claim, where a 1 is obvious facts and results like 'The earth is round' and '1+1=2'. A 0 is for claims that are very obscure or difficult for anyone to know, like the birthdays of non-notable people. The input is:\n'{text_generation}'"
+        return "Please deconstruct the following paragraph into the smallest possible standalone self-contained facts without semantic repetition, and return the output as a jsonl, where each line is {{claim:[CLAIM], gpt-confidence:[CONF]}}.\nThe confidence score [CONF] should represent your confidence in the claim, where a 1 is obvious facts and results like 'The earth is round' and '1+1=2'. A 0 is for claims that are very obscure or difficult for anyone to know, like the birthdays of non-notable people. The question is {question}. Please do not include claims not relevant to the question. The input is:\n'{text_generation}'"
         
     def break_down_single(self, data, gen_id, cached_results):
         breakdown_dicts_list = []
         generation_list = [data['most_likely_generation']] + data['more_generations'][:self.args.num_samples_for_claims]
+        prompt_list = [data['prompt']] * len(generation_list)
         bd_raw = []
         
-        for bd_id, generation in enumerate(generation_list):
-            breakdown_prompt = self.breakdown_prompt.format(text_generation=generation)
+        for bd_id, (generation, prompt) in enumerate(zip(generation_list, prompt_list)):
+            breakdown_prompt = self.breakdown_prompt.format(text_generation=generation, question=prompt)
             if gen_id < len(cached_results['breakdown']) and bd_id < len(cached_results['breakdown'][gen_id]):
                 breakdown_raw_result = cached_results['breakdown'][gen_id][bd_id]
                 if generation not in breakdown_prompt:
@@ -51,9 +52,11 @@ class BreakdownProcessor:
     def _clean_breakdown_dicts(self, breakdown_dicts):
         cleaned_dicts = []
         for dict_ in breakdown_dicts:
-            if isinstance(dict_['claim'], list):
-                dict_['claim'] = dict_['claim'][0]
-            cleaned_dicts.append(dict_)
+            if 'claim' in dict_  and 'gpt-confidence' in dict_:
+                if isinstance(dict_['claim'], list):
+                    dict_['claim'] = dict_['claim'][0]
+                
+                cleaned_dicts.append(dict_)
         return cleaned_dicts
 
     def _update_cached_breakdown_results(self, gen_id, bd_raw, cached_results):
@@ -93,7 +96,7 @@ class BreakdownProcessor:
             except json.JSONDecodeError as e:
                 print(f"Failed to parse as jsonl: {e}")
                 print(line)
-                return None
+                continue
         return subclaims
 
 class MatchProcessor:
@@ -226,7 +229,7 @@ class AutoEvalWrapper:
                 self.fs_cache = self.fs_cache[:gen_id]
                 
             lst_tb_eval = all_claims_lst
-            if 'factscore' in self.args.dataset:
+            if 'factscore' in self.args.dataset or 'ambig' in self.args.dataset:
                 annotates, fs_raw = self.fact_scorer.fact_check_with_gpt(
                     topics=[data['entity']], atomic_facts=[lst_tb_eval], dataset=self.args.dataset
                 )

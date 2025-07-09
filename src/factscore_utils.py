@@ -38,7 +38,7 @@ class DocDB(object):
 
     def __init__(self, db_path=None, data_path=None):
         self.db_path = db_path
-        self.connection = sqlite3.connect('/nlp/scr/jiangm/factscore/enwiki-20230401.db', check_same_thread=False)
+        self.connection = sqlite3.connect('/data/ckp/enwiki-20230401.db', check_same_thread=False)
 
         cursor = self.connection.cursor()
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
@@ -308,7 +308,7 @@ class FactScorer(object):
                 # assert atom_type in {"Objective", 'Direct', 'Numerical Uncertainty', 'Linguistic Uncertainty'}
                 atom = atom.strip()
                 passages = self.retrieval[knowledge_source].get_passages(topic, atom, k=5)
-                if 'factscore' in dataset:
+                if 'factscore' in dataset or 'ambig' in dataset:
                     definition = "Human: Answer the question about {} based on the given context.\n\n".format(topic)
                 elif dataset == 'nq':
                     definition = "Human: You will be provided some context and an input claim. Based on the given context, evaluate the input claim is subjective or objective. If objective, True or False. \n\n"
@@ -340,10 +340,27 @@ class FactScorer(object):
         prompts, _, data_to_return = self.construct_prompts_with_retrieval(topics=topics, atomic_facts= atomic_facts, dataset=dataset, verbose=False)
         for prompt in prompts:
             response_content = self.eval_model.generate_given_prompt([{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": prompt}])['generation']
-            mark = mark_dict[response_content.split('ANSWER:')[1].strip().lower()]
+            mark = extract_mark(response_content, mark_dict)
             marks.append(mark)
             raw_results.append({'return': response_content, 'prompt': prompt})
         return marks, raw_results
+
+def extract_mark(response_content, mark_dict):
+    try:
+        if 'ANSWER:' in response_content:
+            answer = response_content.split('ANSWER:')[1].strip()
+        else:
+            answer = response_content.strip()
+        answer = answer.lower().split()[0].strip(".,!?;:")
+        if answer in mark_dict:
+            return mark_dict[answer]
+        else:
+            print(f"[Warning] Unknown answer: '{answer}'")
+            return 'N'
+    except Exception as e:
+        print(f"[Error] Failed to extract mark: {e}")
+        return None
+
 
 class General_Wiki_Eval():
     def __init__(self, error_file) -> None:

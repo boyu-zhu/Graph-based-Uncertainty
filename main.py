@@ -16,7 +16,8 @@ DATA_DIR = 'data'
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--num_generations_per_prompt', type=int, default=10)
-parser.add_argument('--model', type=str, default='gpt-3.5-turbo')
+parser.add_argument('--openai', type=utils.str2bool, default=True)
+parser.add_argument('--model', type=str, default='llama-3-70b-instruct')
 parser.add_argument('--temperature', type=float, default=0.7)
 parser.add_argument('--data_size', type=int, default=50)
 parser.add_argument('--dataset', type=str, default='factscore')

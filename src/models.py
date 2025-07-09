@@ -4,6 +4,7 @@ import torch
 import os
 import src.utils as utils
 
+
 class BaseModel(ABC):
     def __init__(self, model_name, args):
         self.model_name = model_name
@@ -21,18 +22,17 @@ class OpenAIModel(BaseModel):
     def __init__(self, model_name, args):
         super().__init__(model_name, args)
         self.client = OpenAI(
-            # This is the default and can be omitted
-            api_key=os.environ.get("OPENAI_API_KEY"),
+            base_url="http://localhost:8000/v1",
+            api_key='EMPTY',
         )
-        if model_name == 'gpt-3.5-turbo':
-            self.model_name = 'gpt-3.5-turbo-0125'
+        self.model_name = model_name
 
     def generate_given_prompt(self, prompt):
         # print('Prompt\n', prompt)
         if type(prompt) == str:
             prompt = [{'role': 'user', 'content': prompt}]
             
-        if 'gpt' in self.model_name:
+        if 'gpt' in self.model_name or 'llama' in self.model_name:
             response = self.client.chat.completions.create(
                 messages=prompt,
                 model=self.model_name,
@@ -45,7 +45,7 @@ class OpenAIModel(BaseModel):
         return {'generation': response.choices[0].message.content, 'prompt': prompt}
 
     def generate_n_given_prompt(self, prompt):
-        if 'gpt' in self.model_name:
+        if 'gpt' in self.model_name or 'llama' in self.model_name:
             response = self.client.chat.completions.create(
                 model=self.model_name,
                 messages=[{'role': 'user', 'content': prompt}],
@@ -105,7 +105,7 @@ class Llama3Model(BaseModel):
         return {'generation': generations, 'prompt': prompt}
 
 def get_model(model_name, args):
-    if 'gpt' in model_name:
+    if args.openai:
         return OpenAIModel(model_name, args)
     elif 'llama-3' in model_name:
         return Llama3Model(model_name, args)
