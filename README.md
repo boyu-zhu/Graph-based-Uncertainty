@@ -14,8 +14,15 @@ Published in: NeurIPS 2024
 ---
 ---
 ## Replication Instruction
-Launch an OpenAI-style API server using vLLM to serve the LLM
+1. Make sure you've have the environment with essential libraries listed in `requirements.txt` & `vllm`
 
+2. Launch an OpenAI-style API server using vLLM to serve the LLM
+```bash
+bash vllm.sh
+```
+3. Set the `os.environ["HF_DATASETS_CACHE"] = ''`in `main.py` line 13
 
-download the database
-Set the os.environ["HF_DATASETS_CACHE"] = ''
+4. Run the main file
+```bash
+python main.py
+```
